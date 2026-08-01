@@ -22,9 +22,14 @@
 
 <script>
 
-
 const width = 1000;
 const height = 600;
+const margin = {
+  top: 75,
+  right: 60,
+  bottom: 75,
+  left: 250
+};
   
 const svg = d3.select("#chart").attr("width", width).attr("height", height);
 
@@ -79,17 +84,17 @@ function render() {
 function drawScene1(){
   const x = d3.scaleLinear()
             .domain([0, d3.max(comparison, d => d.Median)])
-            .range([200, width - 50]);
+            .range([margin.left, width - margin.right]);
   const y = d3.scaleBand()
             .domain(comparison.map(d => d.Major))
-            .range([50, height - 50])
+            .range([margin.top, height - margin.bottom])
             .padding(0.2);
 
   svg.selectAll("rect")
       .data(comparison).enter().append("rect")
-      .attr("x", 200)
+      .attr("x", margin.left)
       .attr("y", d => y(d.Major))
-      .attr("width", d => x(d.Median) - 200)
+      .attr("width", d => x(d.Median) - margin.left)
       .attr("height", y.bandwidth())
       .attr("fill", d => {
         if (top5Majors.has(d.Major))
@@ -98,23 +103,23 @@ function drawScene1(){
 });
 
   svg.append("g")
-      .attr("transform", "translate(0, 540)")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
       .call(d3.axisBottom(x));
 
   svg.append("g")
-      .attr("transform", "translate(200,0)")
+      .attr("transform", `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(y));
 
   svg.append("text")
-      .attr("x", 500)
-      .attr("y", 25)
+      .attr("x", width/2)
+      .attr("y", 35)
       .attr("text-anchor", "middle")
       .attr("font-size", "24px")
       .attr("font-weight", "bold")
       .text("Top 5 vs Bottom 5 Highest Paying College Majors");
 
   svg.append("text")
-      .attr("x", 300)
+      .attr("x", width/2)
       .attr("y", 590)
       .attr("text-anchor", "middle")
       .text("Median Salary ($)");
@@ -122,11 +127,12 @@ function drawScene1(){
 
 function drawScene2() {
   const x = d3.scaleLinear()
-            .domain(d3.extent(data, d => d.Median))
-            .range([100, width - 50]);
+            .domain([d3.min(data, d => d.Median) - 3000,
+                   d3.max(data, d => d.Median) + 3000])
+            .range([margin.left, width - margin.right]);
   const y = d3.scaleLinear()
             .domain([0, d3.max(data, d => d.Unemployment_rate)])
-            .range([height-75, 50]);
+            .range([height - margin.bottom, margin.top]);
   
   svg.selectAll("circle")
     .data(data).enter().append("circle")
@@ -146,22 +152,44 @@ function drawScene2() {
     });
 
   svg.append("g")
-    .attr("transform", "translate(0, 500)")
+    .attr("transform", `translate(0, ${height - margin.bottom})`)
     .call(d3.axisBottom(x));
 
   svg.append("g")
-      .attr("transform", "translate(100,0)")
+      .attr("transform", `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(y));
+
+  svg.append("text")
+      .attr("x", width/2)
+      .attr("y", 35)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "24px")
+      .attr("font-weight", "bold")
+      .text("Median Salary vs Unemployment Rate");
+
+  svg.append("text")
+      .attr("x", width/2)
+      .attr("y", height - 20)
+      .attr("text-anchor", "middle")
+      .text("Median Salary ($)");
+ 
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", width/2)
+      .attr("y", 35)
+      .attr("text-anchor", "middle")
+      .text("Unemployment Rate");
 }
 
 function drawScene3() {
   const x = d3.scaleLinear()
             .domain([d3.min(comparison, d => +d.P25th) - 5000,
                     d3.max(comparison, d => +d.P75th) + 5000])
-            .range([200, width - 60]);
+            .range([margin.left, width - margin.right]);
   const y = d3.scaleBand()
             .domain(comparison.map(d => d.Major))
-            .range([50, height - 75]);
+            .range([margin.top, height - margin.bottom])
+            .padding(0.4);
 
    svg.selectAll(".range").data(comparison).enter().append("line")
           .attr("class", "range")
@@ -209,18 +237,26 @@ function drawScene3() {
         });
 
   svg.append("g")
-      .attr("transform", "translate(0, 525)")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
       .call(d3.axisBottom(x).tickFormat(d3.format("$,")));
 
   svg.append("g")
-      .attr("transform", "translate(220, 0)")
+      .attr("transform", `translate${margin.left}, 0)`)
       .call(d3.axisLeft(y));
 
   svg.append("text")
       .attr("x", width/2)
-      .attr("y", 30)
+      .attr("y", 35)
       .attr("text-anchor", "middle")
-      .text("Salary Distribution of Top 5 and Bottom 5 Highest Paying Majors");
+      .attr("font-size", "24px")
+      .attr("font-weight", "bold")
+      .text("Salary Distribution of Top 5 vs Bottom 5 Highest Paying Majors");
+
+  svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", height - 20)
+      .attr("text-anchor", "middle")
+      .text("Annual Salary ($)");
 
 }
   
