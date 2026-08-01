@@ -15,16 +15,17 @@ const height = 600;
   
 const svg = d3.select("#chart").attr("width", width).attr("height", height);
   
-d3.csv("https://github.com/fivethirtyeight/data/blob/master/college-majors/all-ages.csv").then(function(data) {
+d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv").then(function(data) {
   data.forEach(d => {d.Median = +d.Median;});
   data.sort((a, b) => b.Median - a.Median);
   const top10 = data.slice(0,10);
   const x = d3.scaleLinear()
-            .domain([-, d3.max(top10, d => d.Median)])
+            .domain([0, d3.max(top10, d => d.Median)])
             .range([200, width - 50]);
   const y = d3.scaleBand()
             .domain(top10.map(d => d.Major))
             .range([50, height - 50])
+            .padding(0.2);
 
   svg.selectAll("rect")
       .data(top10).enter().append("rect")
@@ -35,15 +36,15 @@ d3.csv("https://github.com/fivethirtyeight/data/blob/master/college-majors/all-a
       .attr("fill", "magenta");
 
   svg.append("g")
-      .attr("transform", "translate(0, 50)")
+      .attr("transform", "translate(0, 550)")
       .call(d3.axisBottom(x));
 
-  svg.apend("g")
+  svg.append("g")
       .attr("transform", "translate(200,0)")
       .call(d3.axisLeft(y));
 
   svg.append("text")
-      .attr("x", 300)
+      .attr("x", 500)
       .attr("y", 25)
       .attr("text-anchor", "middle")
       .attr("font-size", "24px")
@@ -52,7 +53,7 @@ d3.csv("https://github.com/fivethirtyeight/data/blob/master/college-majors/all-a
 
   svg.append("text")
       .attr("x", 300)
-      .attr("y", 990)
+      .attr("y", 590)
       .attr("text-anchor", "middle")
       .text("Median Salary ($)");
   
