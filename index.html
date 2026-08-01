@@ -47,7 +47,7 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
 
 d3.select("#next").on("click", function(){
       scene = scene + 1;
-      if (scene > 2) {
+      if (scene > 3) {
         scene = 1;
       }
       render();
@@ -60,6 +60,9 @@ function render() {
   }
   if (scene == 2) {
     drawScene2();
+  }
+  if (scene == 3) {
+    drawScene3();
   }
 }
   
@@ -126,6 +129,60 @@ function drawScene2() {
   svg.append("g")
       .attr("transform", "translate(100,0)")
       .call(d3.axisLeft(y));
+}
+
+function drawScene3() {
+  const x = d3.scaleLinear()
+            .domain(d3.min(top10, d => +d.P25th) - 5000,
+                    d3,max(top10, d => +d.P75th) + 5000])
+            .range([200, width - 60]);
+  const y = d3.scaleBand()
+            .domain(top10.map(d => d.Major))
+            .range([50, height - 75]);
+
+   svg.selectAll(".range").data(top10).enter().append("line")
+          .attr("class", "range")
+          .attr("x1", d => x(+d.P25th))
+          .attr("x2", d => x(+d.P75th))
+          .attr("y1", d => y(d.Major) + y.bandwidth()/2)
+          .attr("y2", d => y(d.Major) + y.bandwidth()/2)
+          .attr("stroke", "gray");
+
+  svg.selectAll(".low").data(top10).enter().append("circle")
+          .attr("class", "low")
+          .attr("cx", d => x(+d.P25th))
+          .attr("cy", d => y(d.Major) + y.bandwidth()/2)
+          .attr("r", 5)
+          .attr("fill", "lightblue");
+
+  svg.selectAll(".high").data(top10).enter().append("circle")
+        .attr("class", "high")
+        .attr("cx", d => x(+d.P75th))
+        .attr("cy", d => y(d.Major) + y.bandwidth()/2)
+        .attr("r", 5)
+        .attr("fill", "darkblue");
+
+  svg.selectAll(".median").data(top10).enter().append("circle")
+        .attr("class", "meidan")
+        .attr("cx", d => x(+d.Median))
+        .attr("cy", d => y(d.Major) + y.bandwidth()/2)
+        .attr("r", 5)
+        .attr("fill", "black");
+
+  svg.append("g")
+      .attr("transform", "translate(0, 525)")
+      .call(d3.axisBottom(x).tickFormat(d3.format("$,")));
+
+  svg.append("g")
+      .attr("transform", "translate(220, 0")
+      .call(d3.axisLeft(y));
+
+  svg.append("text")
+      .attr("x", width/2)
+      .attr("y", 30)
+      .attr("text-anchor", "middle")
+      .text("Salary Distribution of Top 10 Highest Paying Majors");
+
 }
   
   
