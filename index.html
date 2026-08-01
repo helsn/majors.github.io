@@ -31,12 +31,14 @@ const svg = d3.select("#chart").attr("width", width).attr("height", height);
 let data;
 let scene = 1;
   
-d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv").then(function(csv) {
-  csv.forEach(d => {d.Median = +d.Median;
-                    d.Unemployment_rate = +d.Unemployment_rate;});
-  data = csv;
-  render(); 
-});
+d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv")
+  .then(function(csv) {
+      csv.forEach(d => {d.Median = +d.Median;
+                    d.Unemployment_rate = +d.Unemployment_rate;
+                       });
+      data = csv;
+      render(); 
+    });
 
 d3.select("#next").on("click", function(){
       scene = scene + 1;
@@ -49,9 +51,12 @@ d3.select("#next").on("click", function(){
 function render() {
   svg.selectAll("*").remove();
   if (scene == 1){
-    drawScene1();}
+    drawScene1();
+  }
   if (scene == 2) {
-    drawScene2();}}
+    drawScene2();
+  }
+}
   
   
 function drawScene1(){
@@ -94,7 +99,6 @@ function drawScene1(){
       .attr("y", 590)
       .attr("text-anchor", "middle")
       .text("Median Salary ($)");
-  
 }
 
 function drawScene2() {
@@ -120,11 +124,8 @@ function drawScene2() {
       .attr("transform", "translate(100,0)")
       .call(d3.axisLeft(y));
 }
-  });
   
   
 </script>
-
-  
 </body>
 </html>
