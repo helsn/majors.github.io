@@ -128,7 +128,7 @@ function addLegend (showOther = false) {
   }
 }
 
-function addAnnotation(annotation) {
+function addAnnotation(annotations) {
   const makeAnnotation = d3.annotation().type(d3.annotationLabel).annotations(annotations);
   svg.append("g")
       .attr("class", "annotation-group")
