@@ -79,7 +79,38 @@ function render() {
     drawScene3();
   }
 }
-  
+
+function addLegend() (showOther = false) {
+  const legend = svg.append("g")
+                  .attr("transform", `translate(${width - 250), 70)`);
+  legend.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .att("fill", "lightblue");
+  legend.append("text")
+        .attr("x", 30)
+        .attr("y", 15)
+        .text("Top 5 Highest Paying Majors");
+  legend.append("rect")
+        .attr("y", 40)
+        .attr("width", 20)
+        .attr("height", 20)
+        .att("fill", "lightcoral");
+  legend.append("text")
+        .attr("x", 30)
+        .attr("y", 55)
+        .text("Bottom 5 Highest Paying Majors");
+
+  if (showOther) {
+    legend.append("rect")
+        .attr("y", 80)
+        .attr("width", 20)
+        .attr("height", 20)
+        .att("fill", "lightgray");
+    legend.append("text")
+        .attr("x", 30)
+        .attr("y", 95)
+        .text("Other Majors");
   
 function drawScene1(){
   const x = d3.scaleLinear()
@@ -123,6 +154,8 @@ function drawScene1(){
       .attr("y", 590)
       .attr("text-anchor", "middle")
       .text("Median Salary ($)");
+
+  addLegend();
 }
 
 function drawScene2() {
@@ -176,9 +209,11 @@ function drawScene2() {
   svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", margin.left - 40)
+      .attr("y", margin.left)
       .attr("text-anchor", "middle")
       .text("Unemployment Rate");
+
+  addLegend(true);
 }
 
 function drawScene3() {
@@ -257,6 +292,8 @@ function drawScene3() {
       .attr("y", height - 20)
       .attr("text-anchor", "middle")
       .text("Annual Salary ($)");
+
+  addLegend();
 
 }
   
