@@ -30,8 +30,11 @@ const svg = d3.select("#chart").attr("width", width).attr("height", height);
 
 let data;
 let scene = 1;
-let top10;
-let top10Majors;
+let top5;
+let top5Majors;
+let bottom5;
+let bottom5Majors;
+let comparison;
   
 d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv")
   .then(function(csv) {
@@ -39,9 +42,15 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
                     d.Unemployment_rate = +d.Unemployment_rate;
                        });
       data = csv;
-      top10 = [...data].sort((a, b) => b.Median - a.Median)
-                .slice(0,10);
-      top10Majors = new Set(top10.map(d => d.Major));
+    
+      const sorted = [...data].sort((a, b) => b.Median - a.Median);
+      top5 = sorted.slice(0,10);
+      bottom5 = sorted.slice(-5);
+      comparison = [...top5, ...bottom5];
+    
+      top5Majors = new Set(top5.map(d => d.Major));
+      bottom5Majors = new Set(bottom5.map(d => d.Major));
+    
       render(); 
     });
 
@@ -69,20 +78,24 @@ function render() {
   
 function drawScene1(){
   const x = d3.scaleLinear()
-            .domain([0, d3.max(top10, d => d.Median)])
+            .domain([0, d3.max(comparison, d => d.Median)])
             .range([200, width - 50]);
   const y = d3.scaleBand()
-            .domain(top10.map(d => d.Major))
+            .domain(comparison.map(d => d.Major))
             .range([50, height - 50])
             .padding(0.2);
 
   svg.selectAll("rect")
-      .data(top10).enter().append("rect")
+      .data(comparison).enter().append("rect")
       .attr("x", 200)
       .attr("y", d => y(d.Major))
       .attr("width", d => x(d.Median) - 200)
       .attr("height", y.bandwidth())
-      .attr("fill", "lightblue");
+      .attr("fill", d => {
+        if (top5Majors.has(d.Major))
+          return "darkblue");
+        return "lightblue");
+});
 
   svg.append("g")
       .attr("transform", "translate(0, 540)")
@@ -98,7 +111,7 @@ function drawScene1(){
       .attr("text-anchor", "middle")
       .attr("font-size", "24px")
       .attr("font-weight", "bold")
-      .text("Top 10 Highest Paying College Majors");
+      .text("Top 5 vs Bottom 5 Highest Paying College Majors");
 
   svg.append("text")
       .attr("x", 300)
@@ -119,8 +132,17 @@ function drawScene2() {
     .data(data).enter().append("circle")
     .attr("cx", d => x(d.Median))
     .attr("cy", d => y(d.Unemployment_rate))
-    .attr("r", 5)
-    .attr("fill", d => top10Majors.has(d.Major) ? "lightblue" : "lightyellow");
+    .attr("r", d => {
+      if (top5Majors.has(d.Major) || bottom5Majors.has(d.Major))
+        return 7;
+      return 4;
+    })
+    .attr("fill", d => {
+      if (top5Majors.has(d.Major))
+        return "darkblue";
+      if (bottom5Majors.has(d.Major))
+        return "lightblue";
+    });
 
   svg.append("g")
     .attr("transform", "translate(0, 500)")
@@ -133,55 +155,71 @@ function drawScene2() {
 
 function drawScene3() {
   const x = d3.scaleLinear()
-            .domain([d3.min(top10, d => +d.P25th) - 5000,
-                    d3.max(top10, d => +d.P75th) + 5000])
+            .domain([d3.min(comparison, d => +d.P25th) - 5000,
+                    d3.max(comparison, d => +d.P75th) + 5000])
             .range([200, width - 60]);
   const y = d3.scaleBand()
-            .domain(top10.map(d => d.Major))
+            .domain(comparison.map(d => d.Major))
             .range([50, height - 75]);
 
-   svg.selectAll(".range").data(top10).enter().append("line")
+   svg.selectAll(".range").data(comparison).enter().append("line")
           .attr("class", "range")
           .attr("x1", d => x(+d.P25th))
           .attr("x2", d => x(+d.P75th))
           .attr("y1", d => y(d.Major) + y.bandwidth()/2)
           .attr("y2", d => y(d.Major) + y.bandwidth()/2)
-          .attr("stroke", "gray");
+          .attr("stroke", d => {
+              if (top5Majors.has(d.Major))
+                return "darkblue");
+              return "lightblue");
+          });
 
-  svg.selectAll(".low").data(top10).enter().append("circle")
+  svg.selectAll(".low").data(comparison).enter().append("circle")
           .attr("class", "low")
           .attr("cx", d => x(+d.P25th))
           .attr("cy", d => y(d.Major) + y.bandwidth()/2)
           .attr("r", 5)
-          .attr("fill", "lightblue");
+          .attr("fill", d => {
+            if (top5Majors.has(d.Major))
+                return "darkblue");
+              return "lightblue");
+          });
 
-  svg.selectAll(".high").data(top10).enter().append("circle")
+  svg.selectAll(".high").data(comparison).enter().append("circle")
         .attr("class", "high")
         .attr("cx", d => x(+d.P75th))
         .attr("cy", d => y(d.Major) + y.bandwidth()/2)
         .attr("r", 5)
-        .attr("fill", "darkblue");
+        .attr("fill", d => {
+            if (top5Majors.has(d.Major))
+                return "darkblue");
+              return "lightblue");
+        });
 
-  svg.selectAll(".median").data(top10).enter().append("circle")
-        .attr("class", "meidan")
+  svg.selectAll(".median").data(comparison).enter().append("circle")
+        .attr("class", "median")
         .attr("cx", d => x(+d.Median))
         .attr("cy", d => y(d.Major) + y.bandwidth()/2)
         .attr("r", 5)
-        .attr("fill", "black");
+        .attr("fill", d => {
+            if (top5Majors.has(d.Major))
+                return "darkblue");
+              return "lightblue");
+        });
 
   svg.append("g")
       .attr("transform", "translate(0, 525)")
       .call(d3.axisBottom(x).tickFormat(d3.format("$,")));
 
   svg.append("g")
-      .attr("transform", "translate(220, 0")
+      .attr("transform", "translate(220, 0)")
       .call(d3.axisLeft(y));
 
   svg.append("text")
       .attr("x", width/2)
       .attr("y", 30)
       .attr("text-anchor", "middle")
-      .text("Salary Distribution of Top 10 Highest Paying Majors");
+      .text("Salary Distribution of Top 5 and Bottom 5 Highest Paying Majors");
 
 }
   
