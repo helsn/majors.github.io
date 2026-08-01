@@ -16,7 +16,7 @@
 
 <body>
 
-<title> College Majors & Salaries </title>
+<h1> College Majors & Salaries </h1>
 <button id = "next">Next </button>
 <svg id="chart"></svg>
 
@@ -176,7 +176,7 @@ function drawScene2() {
   svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", 25)
+      .attr("y", margin.left - 40)
       .attr("text-anchor", "middle")
       .text("Unemployment Rate");
 }
@@ -241,7 +241,7 @@ function drawScene3() {
       .call(d3.axisBottom(x).tickFormat(d3.format("$,")));
 
   svg.append("g")
-      .attr("transform", `translate${margin.left}, 0)`)
+      .attr("transform", `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(y));
 
   svg.append("text")
@@ -250,7 +250,7 @@ function drawScene3() {
       .attr("text-anchor", "middle")
       .attr("font-size", "24px")
       .attr("font-weight", "bold")
-      .text("Salary Distribution of Top 5 vs Bottom 5 Highest Paying Majors");
+      .text("Salary Distribution of Top 5 vs Bottom 5 Majors");
 
   svg.append("text")
       .attr("x", width / 2)
