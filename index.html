@@ -2,23 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title> Top 10 Highest Paying College Majors </title>
+  <title> College Majors & Salaries </title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body{font-family: Arial, sans-serif;
+         text-align: center;}
+    button{
+      margin:15px;
+      padding: 5px 20px;
+      font-size: 12px;}
+  </style>
 </head>
 
 <body>
+
+<h3> College Majors & Salaries </h3>
+<button id = "next">Next </button>
 <svg id="chart"></svg>
 
 <script>
+
+
 const width = 1000;
 const height = 600;
   
 const svg = d3.select("#chart").attr("width", width).attr("height", height);
+
+let data;
+let scene = 1;
   
 d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv").then(function(data) {
-  data.forEach(d => {d.Median = +d.Median;});
-  data.sort((a, b) => b.Median - a.Median);
-  const top10 = data.slice(0,10);
+  data.forEach(d => {d.Median = +d.Median;
+                    d.Unemployment_rate = +d.Unemployement_rate;});
+
+d3.select("#next").on("click", function(){
+      scene = scene + 1;
+      if (scene > 2) {
+        scene = 1;
+      }
+      render();
+});
+
+function render() {
+  svg.selectAll("*").remove();
+  if (scene == 1){
+    drawScene1();}
+  if (scene == 2) {
+    drawScene2();}}
+  
+  
+function drawScene1(){
+  const top10 = [...data].sort((a, b) => b.Median - a.Median)
+                .slice(0,10);
   const x = d3.scaleLinear()
             .domain([0, d3.max(top10, d => d.Median)])
             .range([200, width - 50]);
@@ -33,7 +68,7 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
       .attr("y", d => y(d.Major))
       .attr("width", d => x(d.Median) - 200)
       .attr("height", y.bandwidth())
-      .attr("fill", "magenta");
+      .attr("fill", "ligthblue");
 
   svg.append("g")
       .attr("transform", "translate(0, 550)")
@@ -57,7 +92,31 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
       .attr("text-anchor", "middle")
       .text("Median Salary ($)");
   
-});
+}
+
+function drawScene2() {
+  const x = d3.scaleLinear()
+            .domain(d3.extent(data, d => d.Median)])
+            .range([100, width - 50]);
+  const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.Unemployement_rate)])
+            .range([height-75, 50])
+  
+  svg.selectAll("circle")
+    .data(data).enter().append("circle")
+    .attr("cx", d => x(d.Median))
+    .attr("cy", d => y(d.Unemployment_rate))
+    .attr("r", 5)
+    .attr("fill", "ligthblue");
+
+  svg.append("g")
+    .attr("transform", "translate(0, 500)")
+    .call(d3.axisBottom(x));
+
+  svg.append("g")
+      .attr("transform", "translate(100,0)")
+      .call(d3.axisLeft(y));
+}
   
   
 </script>
