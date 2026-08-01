@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title> College Majors & Salaries </title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3-annotation.s3.amazonaws.com/d3-annotation.v2.js"></script>
   <style>
     body{font-family: Arial, sans-serif;
          text-align: center;}
@@ -126,6 +127,13 @@ function addLegend (showOther = false) {
         .text("Other Majors");
   }
 }
+
+function addAnnotation(annotation) {
+  const makeAnnotation = d3.annotation().type(d3.annotationLabel).annotations(annotations);
+  svg.append("g")
+      .attr("class", "annotation-group")
+      .call(makeAnnotation);
+}
   
 function drawScene1(){
   const x = d3.scaleLinear()
@@ -171,6 +179,15 @@ function drawScene1(){
       .text("Median Salary ($)");
 
   addLegend();
+  addAnnotation([
+    { note: {label: "The highest-paying majors have median salaries significantly higher than the lowest-paying majors and tend to be engineering majors.",
+             title: "Salary Gap"
+            },
+     x: margin.left + 500,
+     y: y(top5[0].Major) + y.bandwidth() / 2,
+     dx: 100,
+     dy: -80}
+    ]);
 }
 
 function drawScene2() {
@@ -229,6 +246,15 @@ function drawScene2() {
       .text("Unemployment Rate");
 
   addLegend(true);
+  addAnnotation([
+    { note: {label: "Even the highest paid majors have variation in unemployment rates, but tend to have lower unemployment rates than the 5 lowest paying majors.",
+             title: "Salary vs Unemployment"
+            },
+     x: x(top5[0].Median,
+     y: y(top5[0].Unemployment_rate),
+     dx: -150,
+     dy: -80}
+    ]);
 }
 
 function drawScene3() {
@@ -309,6 +335,15 @@ function drawScene3() {
       .text("Annual Salary ($)");
 
   addLegend();
+  addAnnotation([
+    { note: {label: "The top 5 highest paying majors have a larger range of salaries than the lowest paying majors.",
+             title: "Salary Distribution"
+            },
+     x: x((+comparison[0].P25th + +comparison[0].P75th) / 2),
+     y: y(comparison[0].Major) + y.bandwidth() / 2,
+     dx: 100,
+     dy: -60}
+    ]);
 
 }
 
@@ -378,6 +413,15 @@ function drawScene4() {
       .text("Unemployment Rate");
 
   addLegend(true);
+    addAnnotation([
+    { note: {label: "Explore individual majors by hovering over points",
+             title: "Explore the Data"
+            },
+     x: width / 2,
+     y: height / 2,
+     dx: 150,
+     dy: -100}
+    ]);
 }
   
   
