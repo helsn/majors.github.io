@@ -133,8 +133,8 @@ function drawScene2() {
 
 function drawScene3() {
   const x = d3.scaleLinear()
-            .domain(d3.min(top10, d => +d.P25th) - 5000,
-                    d3,max(top10, d => +d.P75th) + 5000])
+            .domain([d3.min(top10, d => +d.P25th) - 5000,
+                    d3.max(top10, d => +d.P75th) + 5000])
             .range([200, width - 60]);
   const y = d3.scaleBand()
             .domain(top10.map(d => d.Major))
