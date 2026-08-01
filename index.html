@@ -40,6 +40,14 @@ let top5Majors;
 let bottom5;
 let bottom5Majors;
 let comparison;
+
+const svg = d3.select("#chart")
+const tooltip = d3.select("body").append("div")
+                  .style("position", "absolute")
+                  .style("background", "white")
+                  .style("border", "1px solid gray")
+                  .style("padding", "6px")
+                  .style("opacity", 0);
   
 d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv")
   .then(function(csv) {
@@ -61,7 +69,7 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
 
 d3.select("#next").on("click", function(){
       scene = scene + 1;
-      if (scene > 3) {
+      if (scene > 4) {
         scene = 1;
       }
       render();
@@ -77,6 +85,9 @@ function render() {
   }
   if (scene == 3) {
     drawScene3();
+  }
+  if (scene == 4) {
+    drawScene4();
   }
 }
 
@@ -214,7 +225,7 @@ function drawScene2() {
   svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", margin.left)
+      .attr("y", margin.left - 20)
       .attr("text-anchor", "middle")
       .text("Unemployment Rate");
 
@@ -301,6 +312,74 @@ function drawScene3() {
   addLegend();
 
 }
+
+function drawScene4() {
+  const x = d3.scaleLinear()
+            .domain([d3.min(data, d => d.Median) - 3000,
+                   d3.max(data, d => d.Median) + 3000])
+            .range([margin.left, width - margin.right]);
+  const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.Unemployment_rate)])
+            .range([height - margin.bottom, margin.top]);
+  
+  svg.selectAll("circle")
+    .data(data).enter().append("circle")
+    .attr("cx", d => x(d.Median))
+    .attr("cy", d => y(d.Unemployment_rate))
+    .attr("r", 5)
+    .attr("fill", "lightgray")
+    .on("mouseover", function(event, d){
+      d3.select(this)
+          .attr("r", 7)
+          .attr("fill", "plum");
+
+      tooltip.style("opacity", 1)
+          .html(
+            `<b> ${d.Major} </b> <br>
+            Median Salary: $${d.Median} <br>
+            Unemployment: ${(d.Unemployment_rate * 100)}%`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
+    })
+  .on("mouseout", function() {
+      d3.select(this)
+        .attr("r", 5)
+        .attr("fill", "lightgray");
+    tooltip.style("opacity", 0);
+  });
+
+  svg.append("g")
+    .attr("transform", `translate(0, ${height - margin.bottom})`)
+    .call(d3.axisBottom(x));
+
+  svg.append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y));
+
+  svg.append("text")
+      .attr("x", width/2)
+      .attr("y", 35)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "24px")
+      .attr("font-weight", "bold")
+      .text("Explore All College Majors");
+
+  svg.append("text")
+      .attr("x", width/2)
+      .attr("y", height - 20)
+      .attr("text-anchor", "middle")
+      .text("Median Salary ($)");
+ 
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("y", margin.left - 20)
+      .attr("text-anchor", "middle")
+      .text("Unemployment Rate");
+
+  addLegend(true);
+}
+  
   
   
 </script>
