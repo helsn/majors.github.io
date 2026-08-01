@@ -80,7 +80,7 @@ function render() {
   }
 }
 
-function addLegend() (showOther = false) {
+function addLegend (showOther = false) {
   const legend = svg.append("g")
                   .attr("transform", `translate(${width - 250), 70)`);
   legend.append("rect")
