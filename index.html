@@ -16,19 +16,19 @@
 
 <body>
 
-<h3> College Majors & Salaries </h3>
+<title> College Majors & Salaries </title>
 <button id = "next">Next </button>
 <svg id="chart"></svg>
 
 <script>
 
-const width = 1000;
+const width = 1200;
 const height = 600;
 const margin = {
   top: 75,
   right: 60,
   bottom: 75,
-  left: 250
+  left: 350
 };
   
 const svg = d3.select("#chart").attr("width", width).attr("height", height);
@@ -175,8 +175,8 @@ function drawScene2() {
  
   svg.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("x", width/2)
-      .attr("y", 35)
+      .attr("x", -height / 2)
+      .attr("y", 25)
       .attr("text-anchor", "middle")
       .text("Unemployment Rate");
 }
