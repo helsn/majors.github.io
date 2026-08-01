@@ -82,34 +82,37 @@ function render() {
 
 function addLegend (showOther = false) {
   const legend = svg.append("g")
-                  .attr("transform", `translate(${width - margin.right - 250}, ${margin.top - 50})`);
+                  .attr("transform", `translate(${width - margin.right - 220}, ${margin.top - 55})`);
   legend.append("rect")
-        .attr("width", 20)
-        .attr("height", 20)
+        .attr("width", 12)
+        .attr("height", 12)
         .attr("fill", "lightblue");
   legend.append("text")
-        .attr("x", 30)
-        .attr("y", 15)
+        .attr("x", 18)
+        .attr("y", 10)
+        .attr("font-size", "12px")
         .text("Top 5 Highest Paying Majors");
   legend.append("rect")
-        .attr("y", 40)
-        .attr("width", 20)
-        .attr("height", 20)
+        .attr("y", 22)
+        .attr("width", 12)
+        .attr("height", 12)
         .attr("fill", "lightcoral");
   legend.append("text")
-        .attr("x", 30)
-        .attr("y", 55)
+        .attr("x", 18)
+        .attr("y", 32)
+        .attr("font-size", "12px")
         .text("Bottom 5 Highest Paying Majors");
 
   if (showOther) {
     legend.append("rect")
-        .attr("y", 80)
-        .attr("width", 20)
-        .attr("height", 20)
+        .attr("y", 44)
+        .attr("width", 12)
+        .attr("height", 12)
         .attr("fill", "lightgray");
     legend.append("text")
-        .attr("x", 30)
-        .attr("y", 95)
+        .attr("x", 18)
+        .attr("y", 54)
+        .attr("font-size", "12px")
         .text("Other Majors");
   }
 }
