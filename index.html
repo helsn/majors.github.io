@@ -71,7 +71,7 @@ function drawScene1(){
       .attr("y", d => y(d.Major))
       .attr("width", d => x(d.Median) - 200)
       .attr("height", y.bandwidth())
-      .attr("fill", "ligthblue");
+      .attr("fill", "lightblue");
 
   svg.append("g")
       .attr("transform", "translate(0, 540)")
@@ -103,7 +103,7 @@ function drawScene2() {
             .range([100, width - 50]);
   const y = d3.scaleLinear()
             .domain([0, d3.max(data, d => d.Unemployment_rate)])
-            .range([height-75, 50])
+            .range([height-75, 50]);
   
   svg.selectAll("circle")
     .data(data).enter().append("circle")
