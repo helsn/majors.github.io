@@ -93,8 +93,8 @@ function drawScene1(){
       .attr("height", y.bandwidth())
       .attr("fill", d => {
         if (top5Majors.has(d.Major))
-          return "darkblue");
-        return "lightblue");
+          return "darkblue";
+        return "lightblue";
 });
 
   svg.append("g")
@@ -170,8 +170,8 @@ function drawScene3() {
           .attr("y2", d => y(d.Major) + y.bandwidth()/2)
           .attr("stroke", d => {
               if (top5Majors.has(d.Major))
-                return "darkblue");
-              return "lightblue");
+                return "darkblue";
+              return "lightblue";
           });
 
   svg.selectAll(".low").data(comparison).enter().append("circle")
@@ -181,8 +181,8 @@ function drawScene3() {
           .attr("r", 5)
           .attr("fill", d => {
             if (top5Majors.has(d.Major))
-                return "darkblue");
-              return "lightblue");
+                return "darkblue";
+              return "lightblue";
           });
 
   svg.selectAll(".high").data(comparison).enter().append("circle")
@@ -192,8 +192,8 @@ function drawScene3() {
         .attr("r", 5)
         .attr("fill", d => {
             if (top5Majors.has(d.Major))
-                return "darkblue");
-              return "lightblue");
+                return "darkblue";
+              return "lightblue";
         });
 
   svg.selectAll(".median").data(comparison).enter().append("circle")
@@ -203,8 +203,8 @@ function drawScene3() {
         .attr("r", 5)
         .attr("fill", d => {
             if (top5Majors.has(d.Major))
-                return "darkblue");
-              return "lightblue");
+                return "darkblue";
+              return "lightblue";
         });
 
   svg.append("g")
