@@ -30,6 +30,8 @@ const svg = d3.select("#chart").attr("width", width).attr("height", height);
 
 let data;
 let scene = 1;
+let top10;
+let top10Majors;
   
 d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/all-ages.csv")
   .then(function(csv) {
@@ -37,6 +39,9 @@ d3.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/college-ma
                     d.Unemployment_rate = +d.Unemployment_rate;
                        });
       data = csv;
+      top10 = [...data].sort((a, b) => b.Median - a.Median)
+                .slice(0,10);
+      top10Majors = new Set(top10.map(d => d.Major));
       render(); 
     });
 
@@ -60,8 +65,6 @@ function render() {
   
   
 function drawScene1(){
-  const top10 = [...data].sort((a, b) => b.Median - a.Median)
-                .slice(0,10);
   const x = d3.scaleLinear()
             .domain([0, d3.max(top10, d => d.Median)])
             .range([200, width - 50]);
@@ -114,7 +117,7 @@ function drawScene2() {
     .attr("cx", d => x(d.Median))
     .attr("cy", d => y(d.Unemployment_rate))
     .attr("r", 5)
-    .attr("fill", "lightblue");
+    .attr("fill", d => top10Majors.has(d.Major) ? "lightblue" : "lightyellow");
 
   svg.append("g")
     .attr("transform", "translate(0, 500)")
