@@ -376,7 +376,11 @@ function drawScene4() {
       tooltip.style("opacity", 1)
           .html(
             `<b> ${d.Major} </b> <br>
+            25th Percentile Salary: <br>
+            $${(+d.P25th)}<br>
             Median Salary: $${d.Median} <br>
+            75th Percentile Salary: <br>
+            $${(+d.P75th)} <br>
             Unemployment Rate: <br>
             ${(d.Unemployment_rate * 100)}%`)
             .style("left", (event.pageX + 10) + "px")
