@@ -183,7 +183,7 @@ function drawScene1(){
     { note: {label: "The highest-paying majors have median salaries significantly higher than the lowest-paying majors and tend to be engineering majors.",
              title: "Salary Gap"
             },
-     x: x(top5[0].Median) - 10,
+     x: x(top5[0].Median) - 30,
      y: y(top5[0].Major) + 20,
      dx: -40,
      dy: 100}
@@ -252,8 +252,8 @@ function drawScene2() {
             },
      x: x(top5[0].Median),
      y: y(top5[0].Unemployment_rate),
-     dx: -150,
-     dy: -100}
+     dx: -50,
+     dy: -50}
     ]);
 }
 
@@ -339,7 +339,7 @@ function drawScene3() {
     { note: {label: "The top 5 highest paying majors have a larger range of salaries than the lowest paying majors.",
              title: "Salary Distribution"
             },
-     x: x(+comparison[0].Median) + 200,
+     x: x(+comparison[0].Median) + 175,
      y: y(comparison[0].Major) + y.bandwidth() / 2,
      dx: 70,
      dy: 45}
@@ -425,8 +425,8 @@ function drawScene4() {
             },
      x: width / 2 + 300,
      y: height / 2,
-     dx: 150,
-     dy: -90}
+     dx: 50,
+     dy: -50}
     ]);
 }
   
