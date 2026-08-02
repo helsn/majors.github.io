@@ -129,7 +129,7 @@ function addLegend (showOther = false) {
 }
 
 function addAnnotation(annotations) {
-  const makeAnnotation = d3.annotation().type(d3.annotationLabel).annotations(annotations);
+  const makeAnnotation = d3.annotation().type(d3.annotationCalloutRect).annotations(annotations);
   svg.append("g")
       .attr("class", "annotation-group")
       .call(makeAnnotation);
@@ -183,10 +183,10 @@ function drawScene1(){
     { note: {label: "The highest-paying majors have median salaries significantly higher than the lowest-paying majors and tend to be engineering majors.",
              title: "Salary Gap"
             },
-     x: x(top5[0].Median),
-     y: y(top5[0].Major) + y.bandwidth() / 2,
-     dx: -180,
-     dy: 40}
+     x: x(top5[0].Median) - 10,
+     y: y(top5[0].Major) + 20,
+     dx: -40,
+     dy: 100}
     ]);
 }
 
@@ -252,8 +252,8 @@ function drawScene2() {
             },
      x: x(top5[0].Median),
      y: y(top5[0].Unemployment_rate),
-     dx: -170,
-     dy: 60}
+     dx: -150,
+     dy: -100}
     ]);
 }
 
@@ -339,9 +339,9 @@ function drawScene3() {
     { note: {label: "The top 5 highest paying majors have a larger range of salaries than the lowest paying majors.",
              title: "Salary Distribution"
             },
-     x: x(+comparison[0].Median),
+     x: x(+comparison[0].Median) + 200,
      y: y(comparison[0].Major) + y.bandwidth() / 2,
-     dx: -170,
+     dx: 70,
      dy: 45}
     ]);
 
@@ -423,10 +423,10 @@ function drawScene4() {
     { note: {label: "Explore individual majors by hovering over points",
              title: "Explore the Data"
             },
-     x: width / 2,
+     x: width / 2 + 300,
      y: height / 2,
      dx: 150,
-     dy: -100}
+     dy: -90}
     ]);
 }
   
